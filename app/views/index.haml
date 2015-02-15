@@ -1,0 +1,43 @@
+!!!
+%html
+  %head
+    %title Webwarrior
+    %link{rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"}
+    %link{rel: "stylesheet", href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css"}
+    %script{src: "//code.jquery.com/jquery-1.11.2.min.js"}
+    %script{src: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"}
+  %body
+    .container
+      %h1 Webwarrior
+      .row
+        .col-md-2
+          %h4{style: 'margin-top: 4px'} Projects
+          %a.btn.btn-link{href: '/'}= "all (#{@all_tasks_count})"
+          - @projects.each do |project|
+            - if project.name == @project_name
+              %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}
+                %strong= "#{project.name} (#{project.pending_tasks.count})"
+            - else
+              %a.btn.btn-link{href: "/project/#{URI.encode(project.name)}"}= "#{project.name} (#{project.pending_tasks.count})"
+            %br
+        .col-md-10
+          %h3{style: 'margin-top: 0'}= "#{@project_name} (#{@tasks.count})"
+          %table.table
+            %thead
+              %tr
+                %th.text-center Id
+                %th Task
+                %th.text-center Priority
+                %th.text-center Due
+                %th.text-center Created
+                %th
+            %tbody
+              - @tasks.each do |task|
+                %tr
+                  %td.text-center= task.id
+                  %td= task.description
+                  %td.text-center= task.priority
+                  %td.text-center= task.due.strftime('%d/%m/%Y') if task.due
+                  %td.text-center= task.entry.strftime('%d/%m/%Y')
+                  %td.text-center
+                    %a.btn.btn-primary.btn-xs{href: "/task/#{URI.encode(task.uuid)}/done"} Done!
