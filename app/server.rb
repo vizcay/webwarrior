@@ -5,6 +5,7 @@ require 'uri'
 
 require_relative 'models/taskwarrior'
 
+set :port, 4488
 also_reload 'app/models/taskwarrior.rb'
 also_reload 'app/models/task.rb'
 also_reload 'app/models/project.rb'
