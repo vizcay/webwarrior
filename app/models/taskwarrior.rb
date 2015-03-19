@@ -9,16 +9,16 @@ class TaskWarrior
     import_data
   end
 
+  def pending_tasks
+    @all_tasks.select { |t| t.status == :pending }
+  end
+
   def all_tasks
     @all_tasks
   end
 
   def completed_tasks
     @all_tasks.select { |t| t.status == :completed }
-  end
-
-  def pending_tasks
-    @all_tasks.select { |t| t.status == :pending }
   end
 
   def projects
@@ -34,15 +34,15 @@ class TaskWarrior
   end
 
   def high_priority
-    tasks.select { |t| t.priority == 'H' }
+    pending_tasks.select { |t| t.priority == 'H' }
   end
 
   def medium_priority
-    tasks.select { |t| t.priority == 'M' }
+    pending_tasks.select { |t| t.priority == 'M' }
   end
 
   def low_priority
-    tasks.select { |t| t.priority == 'L' }
+    pending_tasks.select { |t| t.priority == 'L' }
   end
 
   def import_data
