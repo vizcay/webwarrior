@@ -11,22 +11,53 @@ also_reload 'app/models/task.rb'
 also_reload 'app/models/project.rb'
 
 get '/' do
-  tw               = TaskWarrior.new
-  @all_tasks_count = tw.tasks.count
-  @tasks           = tw.tasks
-  @projects        = tw.projects
-  @project_name    = 'all'
+  @tw              = TaskWarrior.new
+  @tasks           = @tw.pending_tasks
+  @page_title      = 'Pending tasks'
+  @selected_filter = :pending_tasks
+  haml :index
+end
 
+get '/all' do
+  @tw              = TaskWarrior.new
+  @tasks           = @tw.all_tasks
+  @page_title      = 'All tasks'
+  @selected_filter = :all_tasks
+  haml :index
+end
+
+get '/completed' do
+  @tw              = TaskWarrior.new
+  @tasks           = @tw.completed_tasks
+  @page_title      = 'Completed tasks'
+  @selected_filter = :completed_tasks
   haml :index
 end
 
 get '/project/:project' do
-  tw               = TaskWarrior.new
-  @all_tasks_count = tw.tasks.count
-  @tasks           = tw.find_project(params[:project]).pending_tasks
-  @projects        = tw.projects
-  @project_name    = params[:project]
+  @tw               = TaskWarrior.new
+  @tasks            = @tw.find_project(params[:project]).pending_tasks
+  @selected_project = params[:project]
+  @page_title       = "Project #{params[:project]}"
+  haml :index
+end
 
+get '/priority/:priority' do
+  @tw = TaskWarrior.new
+  case params[:priority]
+  when 'H'
+    @tasks             = @tw.high_priority
+    @page_title        = 'High Priority'
+    @selected_priority = :high
+  when 'M'
+    @tasks             = @tw.medium_priority
+    @page_title        = 'Medium Priority'
+    @selected_priority = :medium
+  when 'L'
+    @tasks             = @tw.low_priority
+    @page_title        = 'Low Priority'
+    @selected_priority = :low
+  end
   haml :index
 end
 

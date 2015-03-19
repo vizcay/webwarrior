@@ -11,17 +11,48 @@
       %h1 Webwarrior
       .row
         .col-md-2
-          %h4{style: 'margin-top: 4px'} Projects
-          %a.btn.btn-link{href: '/'}= "all (#{@all_tasks_count})"
-          - @projects.each do |project|
-            - if project.name == @project_name
+          %h4{style: 'margin-top: 6px; margin-bottom: 0;'} Tasks
+          - if @selected_filter == :pending_tasks
+            %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}= "pending (#{@tw.pending_tasks.count})"
+          - else
+            %a.btn.btn-link{href: '/'}= "pending (#{@tw.pending_tasks.count})"
+
+          - if @selected_filter == :completed_tasks
+            %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}= "completed (#{@tw.completed_tasks.count})"
+          - else
+            %a.btn.btn-link{href: '/completed'}= "completed (#{@tw.completed_tasks.count})"
+
+          - if @selected_filter == :all_tasks
+            %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}= "all (#{@tw.all_tasks.count})"
+          - else
+            %a.btn.btn-link{href: '/all'}= "all (#{@tw.all_tasks.count})"
+
+          %h4{style: 'margin-bottom: 0'} By Priority
+          - if @selected_priority == :high
+            %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}= "high (#{@tw.high_priority.count})"
+          - else
+            %a.btn.btn-link{href: '/priority/H'}= "high (#{@tw.high_priority.count})"
+
+          - if @selected_priority == :medium
+            %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}= "medium (#{@tw.medium_priority.count})"
+          - else
+            %a.btn.btn-link{href: '/priority/M'}= "medium (#{@tw.medium_priority.count})"
+
+          - if @selected_priority == :low
+            %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}= "low (#{@tw.low_priority.count})"
+          - else
+            %a.btn.btn-link{href: '/priority/L'}= "low (#{@tw.low_priority.count})"
+
+          %h4{style: 'margin-bottom: 0'} Projects
+          - @tw.projects.each do |project|
+            - if project.name == @selected_project
               %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}
                 %strong= "#{project.name} (#{project.pending_tasks.count})"
             - else
               %a.btn.btn-link{href: "/project/#{URI.encode(project.name)}"}= "#{project.name} (#{project.pending_tasks.count})"
             %br
         .col-md-10
-          %h3{style: 'margin-top: 0'}= "#{@project_name} (#{@tasks.count})"
+          %h3{style: 'margin-top: 0'}= "#{@page_title} (#{@tasks.count})"
           %table.table
             %thead
               %tr
@@ -40,4 +71,4 @@
                   %td.text-center= task.due.strftime('%d/%m/%Y') if task.due
                   %td.text-center= task.entry.strftime('%d/%m/%Y')
                   %td.text-center
-                    %a.btn.btn-primary.btn-xs{href: "/task/#{URI.encode(task.uuid)}/done"} Done!
+                    %a.btn.btn-primary.btn-xs{href: "/task/#{URI.encode(task.uuid)}/done"} Done

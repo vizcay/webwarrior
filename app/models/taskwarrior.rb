@@ -9,7 +9,15 @@ class TaskWarrior
     import_data
   end
 
-  def tasks
+  def all_tasks
+    @all_tasks
+  end
+
+  def completed_tasks
+    @all_tasks.select { |t| t.status == :completed }
+  end
+
+  def pending_tasks
     @all_tasks.select { |t| t.status == :pending }
   end
 
@@ -23,6 +31,18 @@ class TaskWarrior
 
   def find_task_by_uuid(uuid)
     @all_tasks.find { |t| t.uuid == uuid }
+  end
+
+  def high_priority
+    tasks.select { |t| t.priority == 'H' }
+  end
+
+  def medium_priority
+    tasks.select { |t| t.priority == 'M' }
+  end
+
+  def low_priority
+    tasks.select { |t| t.priority == 'L' }
   end
 
   def import_data
