@@ -43,6 +43,15 @@
           - else
             %a.btn.btn-link{href: '/priority/L'}= "low (#{@tw.low_priority.count})"
 
+          %h4{style: 'margin-bottom: 0'} Tags
+          - @tw.tags.each do |tag|
+            - if tag.name == @selected_tag
+              %a.btn.btn-link{style: 'color: black', disabled: 'disabled'}
+                %strong= "#{tag.name} (#{tag.pending_tasks.count})"
+            - else
+              %a.btn.btn-link{href: "/tag/#{URI.encode(tag.name)}"}= "#{tag.name} (#{tag.pending_tasks.count})"
+          %br
+
           %h4{style: 'margin-bottom: 0'} Projects
           - @tw.projects.each do |project|
             - if project.name == @selected_project

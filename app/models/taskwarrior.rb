@@ -1,11 +1,13 @@
 require 'json'
 require_relative 'task'
 require_relative 'project'
+require_relative 'tag'
 
 class TaskWarrior
   def initialize
     @all_tasks    = []
     @all_projects = []
+    @all_tags     = []
     import_data
   end
 
@@ -25,8 +27,16 @@ class TaskWarrior
     @all_projects.select { |p| p.active? }
   end
 
+  def tags
+    @all_tags.select { |t| t.active? }
+  end
+
   def find_project(project_name)
     @all_projects.find { |p| p.name == project_name }
+  end
+
+  def find_tag(tag_name)
+    @all_tags.find { |t| t.name == tag_name }
   end
 
   def find_task_by_uuid(uuid)
@@ -55,12 +65,23 @@ class TaskWarrior
     end
     @all_projects.sort_by! { |p| p.name }
 
+    raw.map { |t| t['tags'] }.flatten.compact.uniq.each do |t|
+      tag = Tag.new
+      tag.name = t
+      @all_tags << tag
+    end
+    @all_tags.sort_by! { |t| t.name }
+
     raw.each do |t|
       task = Task.new
       task.import_from_json(t)
+
       project = find_project(t['project'])
       task.project = project
       project.tasks << task
+
+      t['tags'].each { |tag| find_tag(tag).tasks << task } if t['tags']
+
       @all_tasks << task
     end
     @all_tasks.sort_by! { |t| -t.urgency }
