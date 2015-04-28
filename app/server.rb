@@ -8,7 +8,9 @@ require_relative 'models/taskwarrior'
 set :port, 4488
 also_reload 'app/models/taskwarrior.rb'
 also_reload 'app/models/task.rb'
+also_reload 'app/models/tag.rb'
 also_reload 'app/models/project.rb'
+also_reload 'app/models/subproject.rb'
 
 get '/' do
   @tw              = TaskWarrior.new

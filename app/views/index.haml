@@ -59,6 +59,9 @@
                 %strong= "#{project.name} (#{project.pending_tasks.count})"
             - else
               %a.btn.btn-link{href: "/project/#{URI.encode(project.name)}"}= "#{project.name} (#{project.pending_tasks.count})"
+            - project.subprojects.each do |subproject|
+              - url = "/project/#{URI.encode(subproject.complete_name)}"
+              %a.btn.btn-link{href: url, style: 'margin-left: 10px'}= "- #{subproject.name} (#{subproject.pending_tasks.count})"
             %br
         .col-md-10
           %h3{style: 'margin-top: 0'}= "#{@page_title} (#{@tasks.count})"

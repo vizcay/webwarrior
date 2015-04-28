@@ -1,15 +1,20 @@
 class Project
-  attr_accessor :name, :tasks
+  attr_accessor :name, :tasks, :subprojects
 
   def initialize
-    @tasks = []
+    @tasks       = []
+    @subprojects = []
   end
 
   def pending_tasks
-    tasks.select { |t| t.status == :pending }.sort_by { |t| -t.urgency }
+    all_tasks.select { |t| t.status == :pending }.sort_by { |t| -t.urgency }
   end
 
   def active?
     not pending_tasks.empty?
+  end
+
+  def all_tasks
+    @subprojects.inject(@tasks) { |all_tasks, subproject| all_tasks += subproject.tasks }
   end
 end
