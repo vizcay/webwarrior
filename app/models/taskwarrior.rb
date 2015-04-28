@@ -1,6 +1,7 @@
 require 'json'
 require_relative 'task'
 require_relative 'project'
+require_relative 'subproject'
 require_relative 'tag'
 
 class TaskWarrior
